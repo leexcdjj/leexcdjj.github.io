@@ -4,6 +4,13 @@
 
   <url>
     <loc>https://leexcdjj.github.io/</loc>
+    <lastmod>2025-08-21T20:48:29+08:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://leexcdjj.github.io/about/</loc>
+    <lastmod>2025-08-21T20:48:29+08:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
