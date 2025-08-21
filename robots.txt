@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://leexcdjj.github.io/sitemap.xml
