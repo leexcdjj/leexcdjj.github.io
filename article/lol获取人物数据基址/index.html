@@ -132,7 +132,7 @@
     "keywords": ["LOL"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "0"
+    "wordCount": "321"
   }]
   </script>
 
@@ -593,6 +593,8 @@
   
 
   
+    
+  
 
   
 
@@ -609,6 +611,8 @@
 
   <div class="flex flex-row flex-wrap items-center">
     
+    
+      <span></span>
     
 
     
@@ -751,7 +755,163 @@
         
 
         <div class="article-content max-w-prose mb-20">
-          
+          <p><strong>声明</strong>：本文仅用于教育和研究目的。逆向工程可能违反RiotGames的服务条款，切勿用于作弊或其他违规行为。</p>
+
+<h2 class="relative group">步骤1：使用Cheat Engine扫描动态地址 
+    <div id="步骤1使用cheat-engine扫描动态地址" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e6%ad%a5%e9%aa%a41%e4%bd%bf%e7%94%a8cheat-engine%e6%89%ab%e6%8f%8f%e5%8a%a8%e6%80%81%e5%9c%b0%e5%9d%80" aria-label="">#</a>
+    </span>        
+    
+</h2>
+<p>我们以英雄的生命值（HP）为例，通过Cheat Engine定位动态地址。启动LoL，进入练习模式，选择一名英雄（如Ezreal）。</p>
+<ol>
+<li>打开Cheat Engine，附加到<code>League of Legends.exe</code>进程。</li>
+<li>在游戏中查看英雄当前HP（例如600）。在CE中：
+<ul>
+<li>设置扫描类型为“Exact Value”，值类型为“Float”。</li>
+<li>输入600，点击“First Scan”。</li>
+</ul>
+</li>
+<li>让英雄受到伤害（例如HP降至550），在CE中：
+<ul>
+<li>切换扫描类型为“Decreased Value”。</li>
+<li>点击“Next Scan”。</li>
+</ul>
+</li>
+<li>重复掉血和扫描，直到结果缩减到少数地址（通常4-5个）。选择与HP变化一致的地址（例如<code>0x7FF123456789</code>）。</li>
+<li>添加地址到列表，验证其随HP变化。</li>
+</ol>
+<p>以下是自动化扫描的CE Lua脚本示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-lua" data-lang="lua"><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">process</span> <span class="o">=</span> <span class="n">getOpenedProcessID</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kr">if</span> <span class="n">process</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="s2">&#34;Please attach to League of Legends process.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">return</span>
+</span></span><span class="line"><span class="cl"><span class="kr">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">hpValue</span> <span class="o">=</span> <span class="mf">600.0</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">scanType</span> <span class="o">=</span> <span class="n">stExactValue</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">valueType</span> <span class="o">=</span> <span class="n">vtSingle</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">-- Initial scan</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">memScan</span> <span class="o">=</span> <span class="n">createMemScan</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">memScan.firstScan</span><span class="p">(</span><span class="n">scanType</span><span class="p">,</span> <span class="n">valueType</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">tostring</span><span class="p">(</span><span class="n">hpValue</span><span class="p">),</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="mh">0x40000000</span><span class="p">,</span> <span class="mh">0x7FFFFFFFFFFFFFFF</span><span class="p">,</span> <span class="s2">&#34;+W-C&#34;</span><span class="p">,</span> <span class="n">fsmNotAligned</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">memScan.waitTillDone</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">foundList</span> <span class="o">=</span> <span class="n">createFoundList</span><span class="p">(</span><span class="n">memScan</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">foundList.initialize</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">-- Next scan after HP decrease</span>
+</span></span><span class="line"><span class="cl"><span class="n">hpValue</span> <span class="o">=</span> <span class="mf">550.0</span>
+</span></span><span class="line"><span class="cl"><span class="n">memScan.nextScan</span><span class="p">(</span><span class="n">soDecreasedValue</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">memScan.waitTillDone</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">foundList.update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">-- Output top 5 results</span>
+</span></span><span class="line"><span class="cl"><span class="kr">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">math.min</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">foundList.Count</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="kr">do</span>
+</span></span><span class="line"><span class="cl">    <span class="n">print</span><span class="p">(</span><span class="n">string.format</span><span class="p">(</span><span class="s2">&#34;Address: 0x%X, Value: %f&#34;</span><span class="p">,</span> <span class="n">foundList.Address</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">foundList.Value</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl"><span class="kr">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">foundList.destroy</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">memScan.destroy</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">print</span><span class="p">(</span><span class="s2">&#34;Dynamic addresses identified. Proceed to pointer scanning.&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>运行脚本后，CE会返回动态地址列表。右键目标地址，选择“Find what writes to this address”设置断点，记录写入指令。</p>
+
+<h2 class="relative group">步骤2：使用x64dbg寻找静态指针链 
+    <div id="步骤2使用x64dbg寻找静态指针链" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e6%ad%a5%e9%aa%a42%e4%bd%bf%e7%94%a8x64dbg%e5%af%bb%e6%89%be%e9%9d%99%e6%80%81%e6%8c%87%e9%92%88%e9%93%be" aria-label="">#</a>
+    </span>        
+    
+</h2>
+<p>动态地址在游戏重启后失效，因此需通过x64dbg找到静态基址和偏移量。</p>
+<ol>
+<li>打开x64dbg，附加到<code>League of Legends.exe</code>进程。</li>
+<li>在CE中找到的写入指令（例如<code>movss xmm0, [rax+0x123]</code>）对应的地址，在x64dbg的CPU视图中定位。</li>
+<li>设置断点：使用<code>bp &lt;address&gt;</code>在写入指令处设置断点。触发游戏内HP变化（例如掉血），断点命中后检查寄存器（如RAX）。</li>
+<li>追踪指针链：使用“Follow in Dump”分析多级指针。通常，人物数据存储在对象管理器中，基址可能为<code>[League.dll + static_offset] + offsets</code>。通过多次测试，记录稳定指针链，例如<code>[[League.dll + 0x1A2B3C] + 0x100] + 0x20] + 0xA8</code>。</li>
+</ol>
+<p>以下是x64dbg中的典型汇编代码：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">; Example x64dbg disassembly for HP write
+00007FF712345678: mov rax, [League.dll + 0x1A2B3C]  ; Static base
+00007FF71234567F: add rax, 0x100  ; First offset
+00007FF712345684: mov rcx, [rax + 0x20]  ; Second offset
+00007FF712345689: cmp rcx, 0
+00007FF71234568D: je short 00007FF7123456A0
+00007FF71234568F: movss xmm0, dword ptr [rcx + 0xA8]  ; HP offset
+00007FF712345694: subss xmm0, xmm1  ; Apply damage
+00007FF712345698: movss dword ptr [rcx + 0xA8], xmm0  ; Update HP
+00007FF71234569D: ret
+00007FF7123456A0: nop
+</code></pre><p>以下是x64dbg Python脚本，用于解析指针链：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">x64dbgpy.plugin</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">resolve_pointer_chain</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">addr</span> <span class="o">=</span> <span class="n">x64dbgpy</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">remote_GetModuleBase</span><span class="p">(</span><span class="s2">&#34;League.dll&#34;</span><span class="p">)</span> <span class="o">+</span> <span class="n">base</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">addr</span> <span class="o">=</span> <span class="n">x64dbgpy</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">memory_ReadPtr</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">addr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Null pointer detected. Check offsets.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="n">addr</span> <span class="o">+=</span> <span class="n">offset</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">addr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">base_offset</span> <span class="o">=</span> <span class="mh">0x1A2B3C</span>
+</span></span><span class="line"><span class="cl"><span class="n">offsets</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x100</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0xA8</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">hp_addr</span> <span class="o">=</span> <span class="n">resolve_pointer_chain</span><span class="p">(</span><span class="n">base_offset</span><span class="p">,</span> <span class="n">offsets</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">hp_addr</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hp_value</span> <span class="o">=</span> <span class="n">x64dbgpy</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">memory_ReadFloat</span><span class="p">(</span><span class="n">hp_addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;HP at 0x</span><span class="si">{</span><span class="n">hp_addr</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">hp_value</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Failed to resolve pointer chain.&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>运行脚本，验证指针链在多次游戏重启后是否稳定。</p>
+
+<h2 class="relative group">步骤3：扩展分析其他数据 
+    <div id="步骤3扩展分析其他数据" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e6%ad%a5%e9%aa%a43%e6%89%a9%e5%b1%95%e5%88%86%e6%9e%90%e5%85%b6%e4%bb%96%e6%95%b0%e6%8d%ae" aria-label="">#</a>
+    </span>        
+    
+</h2>
+<p>HP基址只是起点。其他数据（如位置坐标X,Y,Z，技能等级）可通过类似方法获取：</p>
+<ul>
+<li><strong>位置坐标</strong>：通常为浮点向量，偏移可能在<code>+0x1C0</code>附近。重复CE扫描，搜索X坐标（例如召唤师峡谷的坐标值）。</li>
+<li><strong>技能等级</strong>：为整数，扫描<code>1</code>（初始技能等级），升级技能后扫描“Increased Value”。</li>
+<li><strong>结构剖析</strong>：使用CE的“Dissect Data/Structures”功能，分析对象结构，记录偏移。</li>
+</ul>
+
+<h2 class="relative group">注意事项 
+    <div id="注意事项" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9" aria-label="">#</a>
+    </span>        
+    
+</h2>
+<ul>
+<li><strong>反作弊</strong>：LoL的反作弊系统（如Vanguard）可能检测内存操作。测试时使用练习模式，必要时研究绕过方法（合法范围内）。</li>
+<li><strong>偏移变化</strong>：游戏更新可能改变偏移量，定期验证指针链。</li>
+<li><strong>调试</strong>：若地址失效，检查模块基址（<code>League.dll</code>）或使用x64dbg的调用栈分析解密函数。</li>
+</ul>
+
+<h2 class="relative group">总结 
+    <div id="总结" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#%e6%80%bb%e7%bb%93" aria-label="">#</a>
+    </span>        
+    
+</h2>
+<p>通过Cheat Engine扫描动态地址，结合x64dbg逆向静态指针链，你可以成功获取LoL中人物数据的基址，例如HP（<code>[[League.dll + 0x1A2B3C] + 0x100] + 0x20] + 0xA8</code>）。此方法适用于位置、技能等其他数据，核心是耐心扫描和验证。</p>
+<p>继续探索内存的奥秘，祝你逆向成功！</p>
+
           
           
           
@@ -793,7 +953,16 @@
     </footer>
   </article>
 
-        
+        <div id="top-scroller" class="pointer-events-none absolute top-[110vh] bottom-0 w-12 ltr:right-0 rtl:left-0 z-10">
+  <a
+    href="#the-top"
+    class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 mb-16 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label=""
+    title="">
+    &uarr;
+  </a>
+</div>
+
       </main><footer id="site-footer" class="py-10 print:hidden">
   
   
