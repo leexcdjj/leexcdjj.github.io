@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>祝你生日快乐！</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff6f61, #ffb3b3, #ffd1dc);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1.5s ease-in-out;
+            z-index: 1;
+            max-width: 90%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #d32f2f;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 0;
+            animation: bounce 2.5s infinite;
+        }
+        p {
+            font-size: 1.2em;
+            color: #333;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        img {
+            max-width: 80%;
+            width: 100%;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: float 3.5s ease-in-out infinite;
+            transition: transform 0.3s;
+            margin: 20px 0;
+        }
+        img:active {
+            transform: scale(1.05);
+        }
+        @media (min-width: 768px) {
+            .container {
+                padding: 50px;
+                max-width: 700px;
+            }
+            h1 {
+                font-size: 4em;
+            }
+            p {
+                font-size: 1.8em;
+            }
+            img {
+                max-width: 400px;
+                max-height: 400px;
+            }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6f61;
+            opacity: 0.7;
+            animation: fall 6s infinite;
+            z-index: 0;
+            border-radius: 50%;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎉 生日快乐！🎉</h1>
+    <p>愿你的每一天都像今天这样阳光，灿烂且明媚！</p>
+    <img src="/img/Screenshot_2025-08-24-17-44-32-448_com.instagram..jpg" alt="生日蛋糕与主人公">
+</div>
+<script>
+    // 动态生成彩带效果
+    for (let i = 0; i < 40; i++) {
+        let confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDelay = Math.random() * 6 + 's';
+        confetti.style.background = ['#ff6f61', '#ffd700', '#00ff88', '#ff69b4', '#7b68ee'][Math.floor(Math.random() * 5)];
+        document.body.appendChild(confetti);
+    }
+</script>
+</body>
+</html>
